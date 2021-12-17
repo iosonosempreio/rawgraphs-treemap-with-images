@@ -15,7 +15,7 @@ Or they can keep their original aspect and the uncovered space is filled with a 
 
 Toggle the corresponding visual option in the chart sub-menu.
 
-The custom chart comes as a js file that you can load into RAWGraphs. Currently is an experimental feature, use this [nightly build](https://rawcustom.sandbox.inmagik.com/) to test:
+The custom chart [comes as a js file](docs/images-treemap.v0.1.umd.js) that you can load into RAWGraphs. Currently is an experimental feature, use this [nightly build](https://rawcustom.sandbox.inmagik.com/) to test:
 
 - load the dataset
 - load the custom model
