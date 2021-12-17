@@ -5,15 +5,16 @@ Use this example [dataset](example/datasets/photos-twitter-base64.csv), with the
 
 ![Texture fills each area](docs/mapping.png)
 
-Images can fill the entire available rectangular areas:
+### Options
 
-![Texture fills each area](docs/filled.png)
+| Fill area | Preserve aspect |
+| --- | --- |
+| ![Texture fills each area](docs/filled.png) | ![Texture is entirely visible, plus blur](docs/blurred.png) |
+| Each image fills the entire available area and is clipped to it | Each image preserves its aspect. The uncovered space is filled with a blurred version  |
 
-Or they can keep their original aspect and the uncovered space is filled with a blur:
+Toggle the corresponding visual option in the chart group.
 
-![Texture is entirely visible, plus blur](docs/blurred.png)
-
-Toggle the corresponding visual option in the chart sub-menu.
+### Test the chart
 
 The custom chart [comes as a js file](docs/images-treemap.v0.1.umd.js) that you can load into RAWGraphs. Currently is an experimental feature, use this [nightly build](https://rawcustom.sandbox.inmagik.com/) to test:
 
