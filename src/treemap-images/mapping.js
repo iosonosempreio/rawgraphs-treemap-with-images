@@ -34,8 +34,6 @@ export const mapData = function (data, mapping, dataTypes, dimensions) {
   'label' in mapping ? null : (mapping.label = { value: undefined })
   'textures' in mapping ? null : (mapping.textures = { value: undefined })
 
-  console.log(mapping)
-
   const results = []
 
   const result = d3.rollups(

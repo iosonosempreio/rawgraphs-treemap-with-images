@@ -69,6 +69,13 @@ export const visualOptions = {
     group: 'chart',
   },
 
+  textureCovers: {
+    type: 'boolean',
+    label: 'Fill with texture',
+    default: false,
+    group: 'chart',
+  },
+
   colorScale: {
     type: 'colorScale',
     label: 'Color scale',

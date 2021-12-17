@@ -11,8 +11,6 @@ export function render(
   styles
 ) {
 
-  console.log(mapping)
-
   const {
     // artboard
     width,
@@ -35,6 +33,7 @@ export function render(
     showLabelsOutline,
     showHierarchyLabels,
     labelStyles,
+    textureCovers,
   } = visualOptions
 
   const margin = {
@@ -46,7 +45,7 @@ export function render(
 
   const chartWidth = width - margin.left - margin.right
   const chartHeight = height - margin.top - margin.bottom
-  
+
   // create the hierarchical structure
   const nest = d3.rollup(
     data,
@@ -82,6 +81,15 @@ export function render(
     .attr('y', 0)
     .attr('fill', background)
     .attr('id', 'backgorund')
+
+  if (!visualOptions.textureCovers) {
+    d3.select(svgNode)
+      .append('filter')
+      .attr('id', 'blurImages')
+      .append('feGaussianBlur')
+      .attr('in', 'SourceGraphic')
+      .attr('stdDeviation', 3)
+  }
 
   const svg = d3
     .select(svgNode)
@@ -150,17 +158,51 @@ export function render(
     .attr('height', (d) => d.y1 - d.y0)
 
   leaves
-    .append('image')
-    .attr('id', (d, i) => 'image' + i)
-    .attr('xlink:href', (d) => d.data[1].textures)
-    .attr('width', (d) => d.x1 - d.x0)
-    .attr('height', (d) => d.y1 - d.y0)
-
-  leaves
     .append('clipPath')
     .attr('id', (d, i) => 'clip' + i)
     .append('use')
     .attr('xlink:href', (d, i) => '#path' + i)
+
+  // textures
+  if (mapping.textures.value) {
+    // the texture doesn't cover the rectangle area
+    if (!visualOptions.textureCovers) {
+      leaves
+        .append('rect')
+        .attr('id', (d, i) => 'img-bg' + i)
+        .attr('fill', 'white')
+        .attr('width', (d) => d.x1 - d.x0)
+        .attr('height', (d) => d.y1 - d.y0)
+      const blurPadding = 10
+      leaves
+        .append('image')
+        .attr('id', (d, i) => 'image-blurred' + i)
+        .attr('xlink:href', (d) => d.data[1].textures)
+        .attr('width', (d) => d.x1 - d.x0 + blurPadding)
+        .attr('height', (d) => d.y1 - d.y0 + blurPadding)
+        .attr('x', -blurPadding / 2)
+        .attr('y', -blurPadding / 2)
+        .attr(
+          'preserveAspectRatio',
+          `xMidYMid ${visualOptions.textureCovers ? 'slice' : 'slice'}`
+        )
+        .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
+        .attr('filter', 'url(#blurImages)')
+        .attr('opacity',0.6)
+    }
+
+    leaves
+      .append('image')
+      .attr('id', (d, i) => 'image' + i)
+      .attr('xlink:href', (d) => d.data[1].textures)
+      .attr('width', (d) => d.x1 - d.x0)
+      .attr('height', (d) => d.y1 - d.y0)
+      .attr(
+        'preserveAspectRatio',
+        `xMidYMid ${visualOptions.textureCovers ? 'slice' : 'meet'}`
+      )
+      .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
+  }
 
   const texts = leaves
     .append('text')
