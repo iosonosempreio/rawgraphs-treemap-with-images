@@ -69,11 +69,18 @@ export const visualOptions = {
     group: 'chart',
   },
 
-  textureCovers: {
+  fillArea: {
     type: 'boolean',
-    label: 'Fill with texture',
+    label: 'Fill area',
     default: false,
-    group: 'chart',
+    group: 'textures',
+  },
+
+  texturesStrokeSize: {
+    type: 'number',
+    label: 'Texture stroke size',
+    default: 2,
+    group: 'textures',
   },
 
   colorScale: {

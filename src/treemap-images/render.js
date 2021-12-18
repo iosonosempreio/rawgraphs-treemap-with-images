@@ -10,7 +10,6 @@ export function render(
   originalData,
   styles
 ) {
-
   const {
     // artboard
     width,
@@ -33,7 +32,8 @@ export function render(
     showLabelsOutline,
     showHierarchyLabels,
     labelStyles,
-    textureCovers,
+    fillArea,
+    texturesStrokeWidth,
   } = visualOptions
 
   const margin = {
@@ -82,7 +82,7 @@ export function render(
     .attr('fill', background)
     .attr('id', 'backgorund')
 
-  if (!visualOptions.textureCovers) {
+  if (!visualOptions.fillArea) {
     d3.select(svgNode)
       .append('filter')
       .attr('id', 'blurImages')
@@ -149,11 +149,17 @@ export function render(
     .data(root.leaves())
     .join('g')
     .attr('transform', (d) => `translate(${d.x0},${d.y0})`)
-
+  
   leaves
     .append('rect')
     .attr('id', (d, i) => 'path' + i)
-    .attr('fill', (d) => colorScale(d.data[1].color))
+    .attr('fill', (d) => {
+      let value = colorScale(d.data[1].color)
+      if (mapping.textures.value) {
+        value = 'white';
+      }
+      return value
+    })
     .attr('width', (d) => d.x1 - d.x0)
     .attr('height', (d) => d.y1 - d.y0)
 
@@ -165,14 +171,7 @@ export function render(
 
   // textures
   if (mapping.textures.value) {
-    // the texture doesn't cover the rectangle area
-    if (!visualOptions.textureCovers) {
-      leaves
-        .append('rect')
-        .attr('id', (d, i) => 'img-bg' + i)
-        .attr('fill', 'white')
-        .attr('width', (d) => d.x1 - d.x0)
-        .attr('height', (d) => d.y1 - d.y0)
+    if (!visualOptions.fillArea) {
       const blurPadding = 10
       leaves
         .append('image')
@@ -184,23 +183,45 @@ export function render(
         .attr('y', -blurPadding / 2)
         .attr(
           'preserveAspectRatio',
-          `xMidYMid ${visualOptions.textureCovers ? 'slice' : 'slice'}`
+          `xMidYMid ${visualOptions.fillArea ? 'slice' : 'slice'}`
         )
         .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
         .attr('filter', 'url(#blurImages)')
-        .attr('opacity',0.6)
+        .attr('opacity', 0.6)
     }
 
     leaves
       .append('image')
       .attr('id', (d, i) => 'image' + i)
       .attr('xlink:href', (d) => d.data[1].textures)
-      .attr('width', (d) => d.x1 - d.x0)
-      .attr('height', (d) => d.y1 - d.y0)
+      .attr('width', (d) =>
+        Math.max(0, d.x1 - d.x0 - visualOptions.texturesStrokeSize * 2)
+      )
+      .attr('height', (d) =>
+        Math.max(0, d.y1 - d.y0 - visualOptions.texturesStrokeSize * 2)
+      )
+      .attr('x', visualOptions.texturesStrokeSize)
+      .attr('y', visualOptions.texturesStrokeSize)
       .attr(
         'preserveAspectRatio',
-        `xMidYMid ${visualOptions.textureCovers ? 'slice' : 'meet'}`
+        `xMidYMid ${visualOptions.fillArea ? 'slice' : 'meet'}`
       )
+      .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
+
+    leaves
+      .append('rect')
+      .attr('id', (d, i) => 'image-border' + i)
+      .attr('width', (d) =>
+        Math.max(1, d.x1 - d.x0 - visualOptions.texturesStrokeSize)
+      )
+      .attr('height', (d) =>
+        Math.max(1, d.y1 - d.y0 - visualOptions.texturesStrokeSize)
+      )
+      .attr('x', Math.max(0, visualOptions.texturesStrokeSize / 2))
+      .attr('y', Math.max(0, visualOptions.texturesStrokeSize / 2))
+      .attr('fill', 'none')
+      .attr('stroke', (d) => colorScale(d.data[1].color))
+      .attr('stroke-width', visualOptions.texturesStrokeSize)
       .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
   }
 
