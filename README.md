@@ -5,27 +5,32 @@ Use this example [dataset](example/datasets/photos-twitter-base64.csv), with the
 
 ![Texture fills each area](docs/mapping.png)
 
-### Options
-
-| Fill area | Preserve aspect |
+### Textures visual options
+#### Fill area
+| `true` | `false` |
 | --- | --- |
-| ![Texture fills each area](docs/filled.png) | ![Texture is entirely visible, plus blur](docs/blurred.png) |
-| Each image fills the entire available area and is clipped to it | Each image preserves its aspect. The uncovered space is filled with a blurred version  |
+| ![Texture fills each area](docs/stroke-0-fill.png) | ![Texture is entirely visible, plus blur](docs/stroke-0.png) |
+| Each image fills the available area and is clipped to it, similarly to the CSS property `background-size: cover`. | Each image is contained and centered into the available area. The uncovered space is filled with a blur. |
 
-Toggle the corresponding visual option in the chart group.
+#### Stroke size
+Controls the size of the stroke around images.
+| value = 2 | value = 5 | value = 10 | value = 0 |
+| - | - | - | - |
+| ![stroke 2](docs/stroke-2.png) | ![stroke](docs/stroke-5.png) | ![stroke](docs/stroke-10.png) | ![stroke](docs/stroke-0.png) |
+
 
 ### Test the chart
 
 The custom chart [comes as a js file](docs/images-treemap.v0.1.umd.js) that you can load into RAWGraphs. Currently is an experimental feature, use this [nightly build](https://rawcustom.sandbox.inmagik.com/) to test:
 
 - load the dataset
-- load the custom model
+- load and select the custom model
 - map the data
-- profit!
+- <button>profit!</button>
 
 ### Compile your dataset
 
-Create a dataset with a column where images are stored as base64 strings. Similar files can consume quite a lot of storage, but will allow to preserve images even if they go offline. Such datasets can be created with a tool like [this one](https://observablehq.com/@iosonosempreio/images-table-to-base64).
+Create a dataset with a column where images are stored as base64 strings. Similar files can consume quite a lot of storage, but  allow to preserve images even if they go offline at some point in the future. Such datasets can be created with a tool like [this one](https://observablehq.com/@iosonosempreio/images-table-to-base64).
 
 | category-1  | category-2 | textures |
 | ------------- | ------------- | ------------- |
