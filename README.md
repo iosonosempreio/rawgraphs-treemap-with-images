@@ -1,11 +1,18 @@
 # Treemap with images
-A custom model for RAWGraphs 2.0 that allows to produce treemaps with images.
+Implementation of treemap visual model for RAWGraphs 2.0 that allows to display images.
 
-Use this example [dataset](example/datasets/photos-twitter-base64.csv), with the following data mapping:
+### Data
 
-![Texture fills each area](docs/mapping.png)
+Compile a dataset with (a) direct URLs to pictures or (b) Base64 strings. The latter case produces more robust visualizations since base64s embed images directly into the data. It ensures reproducibility of the visualization even in the case in which images go offline, and allow for reworking the SVG in vector editing softwares (Inkscape, Illustrator). Datasets, however, can consume quite a lot of storage and the application interface becomes laggy.
 
-### Textures visual options
+Consider to use services like https://imgbb.com/ or https://postimages.org/ to safely store images online in case you are experiencing too big datasets files.
+
+#### Data samples
+Use these examples for test purposes:
+- [dataset with direct links to images](example/datasets/sample-photos-base64.csv)
+- [dataset with base64 encodings](example/datasets/sample-photos-base64.csv)
+
+### Visual options
 #### Fill area
 | `true` | `false` |
 | --- | --- |
