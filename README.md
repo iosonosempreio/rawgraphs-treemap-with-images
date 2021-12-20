@@ -21,7 +21,7 @@ Controls the size of the stroke around images.
 
 ### Test the chart
 
-The custom chart [comes as a js file](docs/images-treemap.v0.1.umd.js) that you can load into RAWGraphs. Currently is an experimental feature, use this [nightly build](https://rawcustom.sandbox.inmagik.com/) to test:
+The custom chart [comes as a js file](docs/images-treemap.v0.2.umd.js) that you can load into RAWGraphs. Currently is an experimental feature, use this [nightly build](https://rawcustom.sandbox.inmagik.com/) to test:
 
 - load the dataset
 - load and select the custom model
