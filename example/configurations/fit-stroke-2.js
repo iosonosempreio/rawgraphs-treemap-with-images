@@ -1,31 +1,34 @@
 import treemapImages from 'customcharts/treemap-images'
-import data from '../datasets/photos-twitter-base64.csv'
+import data from '../datasets/sample-photos-base64.csv'
 
 export default {
   chart: treemapImages,
   data,
   dataTypes: {
-    Likes: 'number',
-    Category: 'string',
+    id: 'string',
+    username: 'string',
+    account: 'string',
+    category: 'string',
+    likes: 'number',
+    url: 'string',
     base64: 'string',
-    Photo: 'string',
   },
   mapping: {
-    hierarchy: { value: ['Category', 'Photo'] },
+    hierarchy: { value: ['category', 'username', 'id'] },
     color: {
-      value: ['Photo'],
+      value: ['category'],
       config: { aggregation: ['csvDistinct'] },
     },
     size: {
-      value: ['Likes'],
+      value: ['likes'],
       config: { aggregation: ['sum'] },
     },
-    textures: {
-      value: ['base64'],
+    images: {
+      value: ['url'],
       config: { aggregation: ['csvDistinct'] },
     },
     label: {
-      value: ['Category', 'Photo'],
+      value: ['id'],
       config: { aggregation: ['csvDistinct', 'sum', 'csvDistinct'] },
     },
   },
@@ -35,8 +38,8 @@ export default {
     drawHierarchy: true,
     showLabelsOutline: true,
     showHierarchyLabels: false,
-    padding: 2,
-    fillArea: true,
-    texturesStrokeSize: 10
+    padding: 0,
+    fillArea: false,
+    imagesStrokeSize: 2,
   },
 }
