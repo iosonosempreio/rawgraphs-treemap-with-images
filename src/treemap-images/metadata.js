@@ -8,7 +8,7 @@ export const metadata = {
   icon,
   categories: ['hierarchies', 'proportions', 'images'],
   description:
-    "It displays hierarchically structured data and a related quantitative dimension. It is composed of an area divided into small rectangles, representing the last level of the tree structure. The rectangles’ size depends on the quantitative dimension.\nThis model displays images stored in the dataset in base64 format.",
+    "It displays hierarchically structured data and a related quantitative dimension. It is composed of an area divided into small rectangles, representing the last level of the tree structure. The rectangles’ size depends on the quantitative dimension.\nThe model displays images.",
   code: 'https://github.com/iosonosempreio/rawgraphs-treemap-with-images',
   // tutorial:'https://rawgraphs.io/learning/'
 }

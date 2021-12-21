@@ -21,8 +21,8 @@ export const mapData = function (data, mapping, dataTypes, dimensions) {
     dataTypes,
     dimensions
   )
-  const texturesAggregator = getDimensionAggregator(
-    'textures',
+  const imagesAggregator = getDimensionAggregator(
+    'images',
     mapping,
     dataTypes,
     dimensions
@@ -32,7 +32,7 @@ export const mapData = function (data, mapping, dataTypes, dimensions) {
   'color' in mapping ? null : (mapping.color = { value: undefined })
   'size' in mapping ? null : (mapping.size = { value: undefined })
   'label' in mapping ? null : (mapping.label = { value: undefined })
-  'textures' in mapping ? null : (mapping.textures = { value: undefined })
+  'images' in mapping ? null : (mapping.images = { value: undefined })
 
   const results = []
 
@@ -52,9 +52,9 @@ export const mapData = function (data, mapping, dataTypes, dimensions) {
               return labelAggregators[i](v.map((d) => d[label]))
             })
           : undefined, // create array of strings
-        textures : mapping.textures.value
-          ? texturesAggregator(v.map((d) => d[mapping.textures.value]))
-          : 'no textures'
+        images : mapping.images.value
+          ? imagesAggregator(v.map((d) => d[mapping.images.value]))
+          : 'no images'
       }
 
       results.push(item)

@@ -10,6 +10,7 @@ export function render(
   originalData,
   styles
 ) {
+
   const {
     // artboard
     width,
@@ -33,7 +34,7 @@ export function render(
     showHierarchyLabels,
     labelStyles,
     fillArea,
-    texturesStrokeWidth,
+    imagesStrokeWidth,
   } = visualOptions
 
   const margin = {
@@ -149,14 +150,14 @@ export function render(
     .data(root.leaves())
     .join('g')
     .attr('transform', (d) => `translate(${d.x0},${d.y0})`)
-  
+
   leaves
     .append('rect')
     .attr('id', (d, i) => 'path' + i)
     .attr('fill', (d) => {
       let value = colorScale(d.data[1].color)
-      if (mapping.textures.value) {
-        value = 'white';
+      if (mapping.images.value) {
+        value = 'white'
       }
       return value
     })
@@ -169,14 +170,14 @@ export function render(
     .append('use')
     .attr('xlink:href', (d, i) => '#path' + i)
 
-  // textures
-  if (mapping.textures.value) {
+  // images
+  if (mapping.images.value) {
     if (!visualOptions.fillArea) {
       const blurPadding = 10
       leaves
         .append('image')
         .attr('id', (d, i) => 'image-blurred' + i)
-        .attr('xlink:href', (d) => d.data[1].textures)
+        .attr('xlink:href', (d) => d.data[1].images)
         .attr('width', (d) => d.x1 - d.x0 + blurPadding)
         .attr('height', (d) => d.y1 - d.y0 + blurPadding)
         .attr('x', -blurPadding / 2)
@@ -193,15 +194,15 @@ export function render(
     leaves
       .append('image')
       .attr('id', (d, i) => 'image' + i)
-      .attr('xlink:href', (d) => d.data[1].textures)
+      .attr('xlink:href', (d) => d.data[1].images)
       .attr('width', (d) =>
-        Math.max(0, d.x1 - d.x0 - visualOptions.texturesStrokeSize * 2)
+        Math.max(0, d.x1 - d.x0 - visualOptions.imagesStrokeSize * 2)
       )
       .attr('height', (d) =>
-        Math.max(0, d.y1 - d.y0 - visualOptions.texturesStrokeSize * 2)
+        Math.max(0, d.y1 - d.y0 - visualOptions.imagesStrokeSize * 2)
       )
-      .attr('x', visualOptions.texturesStrokeSize)
-      .attr('y', visualOptions.texturesStrokeSize)
+      .attr('x', visualOptions.imagesStrokeSize)
+      .attr('y', visualOptions.imagesStrokeSize)
       .attr(
         'preserveAspectRatio',
         `xMidYMid ${visualOptions.fillArea ? 'slice' : 'meet'}`
@@ -212,16 +213,16 @@ export function render(
       .append('rect')
       .attr('id', (d, i) => 'image-border' + i)
       .attr('width', (d) =>
-        Math.max(1, d.x1 - d.x0 - visualOptions.texturesStrokeSize)
+        Math.max(1, d.x1 - d.x0 - visualOptions.imagesStrokeSize)
       )
       .attr('height', (d) =>
-        Math.max(1, d.y1 - d.y0 - visualOptions.texturesStrokeSize)
+        Math.max(1, d.y1 - d.y0 - visualOptions.imagesStrokeSize)
       )
-      .attr('x', Math.max(0, visualOptions.texturesStrokeSize / 2))
-      .attr('y', Math.max(0, visualOptions.texturesStrokeSize / 2))
+      .attr('x', Math.max(0, visualOptions.imagesStrokeSize / 2))
+      .attr('y', Math.max(0, visualOptions.imagesStrokeSize / 2))
       .attr('fill', 'none')
       .attr('stroke', (d) => colorScale(d.data[1].color))
-      .attr('stroke-width', visualOptions.texturesStrokeSize)
+      .attr('stroke-width', visualOptions.imagesStrokeSize)
       .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
   }
 

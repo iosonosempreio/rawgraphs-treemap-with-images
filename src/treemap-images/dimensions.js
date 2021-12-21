@@ -27,8 +27,8 @@ export const dimensions = [
     },
   },
   {
-    id: 'textures',
-    name: 'Textures',
+    id: 'images',
+    name: 'Images',
     validTypes: ['string'],
     required: false,
     aggregation: true,
