@@ -73,14 +73,14 @@ export const visualOptions = {
     type: 'boolean',
     label: 'Fill area',
     default: false,
-    group: 'textures',
+    group: 'images',
   },
 
-  texturesStrokeSize: {
+  imagesStrokeSize: {
     type: 'number',
-    label: 'Texture stroke size',
+    label: 'Stroke size',
     default: 2,
-    group: 'textures',
+    group: 'images',
   },
 
   colorScale: {
