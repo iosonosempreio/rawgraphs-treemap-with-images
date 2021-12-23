@@ -10,7 +10,6 @@ export function render(
   originalData,
   styles
 ) {
-
   const {
     // artboard
     width,
@@ -34,7 +33,7 @@ export function render(
     showHierarchyLabels,
     labelStyles,
     fillArea,
-    imagesStrokeWidth,
+    imagesStrokeSize,
   } = visualOptions
 
   const margin = {
@@ -83,7 +82,7 @@ export function render(
     .attr('fill', background)
     .attr('id', 'backgorund')
 
-  if (!visualOptions.fillArea) {
+  if (!fillArea) {
     d3.select(svgNode)
       .append('filter')
       .attr('id', 'blurImages')
@@ -172,7 +171,7 @@ export function render(
 
   // images
   if (mapping.images.value) {
-    if (!visualOptions.fillArea) {
+    if (!fillArea) {
       const blurPadding = 10
       leaves
         .append('image')
@@ -182,10 +181,7 @@ export function render(
         .attr('height', (d) => d.y1 - d.y0 + blurPadding)
         .attr('x', -blurPadding / 2)
         .attr('y', -blurPadding / 2)
-        .attr(
-          'preserveAspectRatio',
-          `xMidYMid ${visualOptions.fillArea ? 'slice' : 'slice'}`
-        )
+        .attr('preserveAspectRatio', `xMidYMid ${fillArea ? 'slice' : 'slice'}`)
         .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
         .attr('filter', 'url(#blurImages)')
         .attr('opacity', 0.6)
@@ -195,56 +191,45 @@ export function render(
       .append('image')
       .attr('id', (d, i) => 'image' + i)
       .attr('xlink:href', (d) => d.data[1].images)
-      .attr('width', (d) =>
-        Math.max(0, d.x1 - d.x0 - visualOptions.imagesStrokeSize * 2)
-      )
-      .attr('height', (d) =>
-        Math.max(0, d.y1 - d.y0 - visualOptions.imagesStrokeSize * 2)
-      )
-      .attr('x', visualOptions.imagesStrokeSize)
-      .attr('y', visualOptions.imagesStrokeSize)
-      .attr(
-        'preserveAspectRatio',
-        `xMidYMid ${visualOptions.fillArea ? 'slice' : 'meet'}`
-      )
+      .attr('width', (d) => Math.max(0, d.x1 - d.x0 - imagesStrokeSize * 2))
+      .attr('height', (d) => Math.max(0, d.y1 - d.y0 - imagesStrokeSize * 2))
+      .attr('x', imagesStrokeSize)
+      .attr('y', imagesStrokeSize)
+      .attr('preserveAspectRatio', `xMidYMid ${fillArea ? 'slice' : 'meet'}`)
       .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
 
     leaves
       .append('rect')
       .attr('id', (d, i) => 'image-border' + i)
-      .attr('width', (d) =>
-        Math.max(1, d.x1 - d.x0 - visualOptions.imagesStrokeSize)
-      )
-      .attr('height', (d) =>
-        Math.max(1, d.y1 - d.y0 - visualOptions.imagesStrokeSize)
-      )
-      .attr('x', Math.max(0, visualOptions.imagesStrokeSize / 2))
-      .attr('y', Math.max(0, visualOptions.imagesStrokeSize / 2))
+      .attr('width', (d) => Math.max(1, d.x1 - d.x0 - imagesStrokeSize))
+      .attr('height', (d) => Math.max(1, d.y1 - d.y0 - imagesStrokeSize))
+      .attr('x', Math.max(0, imagesStrokeSize / 2))
+      .attr('y', Math.max(0, imagesStrokeSize / 2))
       .attr('fill', 'none')
       .attr('stroke', (d) => colorScale(d.data[1].color))
-      .attr('stroke-width', visualOptions.imagesStrokeSize)
+      .attr('stroke-width', imagesStrokeSize)
       .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
   }
 
-  const texts = leaves
+  const labels = leaves
     .append('text')
     .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
     .attr('font-family', 'Arial, sans-serif')
     .attr('font-size', 10)
-    .attr('dominant-baseline', 'text-before-edge')
     .attr('class', 'txt')
+    .attr('x', 3)
+    .attr('y', 12)
 
-  texts
+  labels
     .selectAll('tspan')
     .data((d, i, a) => {
-      // console.log(d)
       return Array.isArray(d.data[1].label)
         ? d.data[1].label
         : [d.data[1].label]
     })
     .join('tspan')
     .attr('x', 3)
-    .attr('y', (d, i) => i * 1.1 + 0.2 + 'em')
+    .attr('dy', (d, i) => (i === 0 ? 0 : 12))
     .text((d, i) => {
       if (d && mapping.label.dataType[i].type === 'date') {
         return d3.timeFormat(dateFormats[mapping.label.dataType[i].dateFormat])(
@@ -257,8 +242,13 @@ export function render(
     .styles((d, i) => styles[labelStyles[i]])
 
   if (showLabelsOutline) {
-    // NOTE: Adobe Illustrator does not support paint-order attr
     d3.selectAll('.txt').styles(styles.labelOutline)
+    const outlines = labels
+      .clone(true)
+      .attr('stroke', 'white')
+      .attr('stroke-width', 3)
+      .attr('stroke-linejoin', 'round')
+    labels.raise()
   }
 
   if (showLegend) {
