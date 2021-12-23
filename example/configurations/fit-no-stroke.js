@@ -28,7 +28,7 @@ export default {
       config: { aggregation: ['csvDistinct'] },
     },
     label: {
-      value: ['id'],
+      value: ['category', 'username', 'id'],
       config: { aggregation: ['csvDistinct', 'sum', 'csvDistinct'] },
     },
   },
@@ -41,5 +41,6 @@ export default {
     padding: 0,
     fillArea: false,
     imagesStrokeSize: 0,
+    showLabelsOutline: true,
   },
 }

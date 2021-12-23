@@ -41,5 +41,6 @@ export default {
     padding: 0,
     fillArea: false,
     imagesStrokeSize: 4,
+    showLabelsOutline: true,
   },
 }
