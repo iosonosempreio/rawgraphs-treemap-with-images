@@ -24,7 +24,7 @@ export default {
       config: { aggregation: ['sum'] },
     },
     images: {
-      value: ['url'],
+      value: ['base64'],
       config: { aggregation: ['csvDistinct'] },
     },
     label: {
@@ -42,5 +42,6 @@ export default {
     fillArea: true,
     imagesStrokeSize: 0,
     showLabelsOutline: true,
+    colorizeImages:false
   },
 }

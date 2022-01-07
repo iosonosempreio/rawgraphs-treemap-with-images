@@ -83,6 +83,13 @@ export const visualOptions = {
     group: 'images',
   },
 
+  colorizeImages: {
+    type: 'boolean',
+    label: 'Colorize images',
+    default: false,
+    group: 'images',
+  },
+
   colorScale: {
     type: 'colorScale',
     label: 'Color scale',

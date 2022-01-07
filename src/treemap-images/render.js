@@ -34,6 +34,7 @@ export function render(
     labelStyles,
     fillArea,
     imagesStrokeSize,
+    colorizeImages,
   } = visualOptions
 
   const margin = {
@@ -72,6 +73,8 @@ export function render(
 
   const root = treemap(hierarchy)
 
+  const defs = d3.select(svgNode).append('defs')
+
   // add background
   d3.select(svgNode)
     .append('rect')
@@ -83,12 +86,67 @@ export function render(
     .attr('id', 'backgorund')
 
   if (!fillArea) {
-    d3.select(svgNode)
+    defs
       .append('filter')
       .attr('id', 'blurImages')
       .append('feGaussianBlur')
       .attr('in', 'SourceGraphic')
       .attr('stdDeviation', 3)
+  }
+
+  if (colorizeImages) {
+    // Can't find a function to get the domain and range from the color scale
+    const colorDomain = d3.groups(data, (d) => d.color).map((d) => d[0])
+    const colorFilters = defs
+      .selectAll('.colorize-filter')
+      .data(colorDomain, (d) => d)
+      .enter()
+      .append('filter')
+      .classed('colorize-filter', true)
+      .attr('id', (d) => 'colorize-' + d)
+
+    /*
+      <feColorMatrix
+    type="matrix"
+    values="1   0   0   0   0
+            0   0   0   0   0
+            0   0   1  .5   0
+            0   0   0   1   0 "/>
+    */
+
+    colorFilters
+      .append('feColorMatrix')
+      .attr('type', 'matrix')
+      .attr('values', (d) => {
+        let rgb = colorScale(d)
+        rgb = rgb
+          .substring(4, rgb.length - 1)
+          .replace(/ /g, '')
+          .split(',')
+
+        const [r, g, b] = rgb
+
+        return `${r/255}   0   0   0   0
+                  0   ${g/255}   0   0   0
+                  0   0   ${b/255}   0   0
+                  0   0   0   1   0 `
+      })
+
+    // colorFilters
+    //   .append('feFlood')
+    //   .attr('result', 'floodFill')
+    //   .attr('x', 0)
+    //   .attr('y', 0)
+    //   .attr('width', '100%')
+    //   .attr('height', '100%')
+    //   .attr('flood-color', (d) => colorScale(d))
+    //   .attr('flood-opacity', 1)
+
+    // colorFilters
+    //   .append('feBlend')
+    //   .attr('in', 'SourceGraphic')
+    //   .attr('in2', 'floodFill')
+    //   .attr('mode', 'color')
   }
 
   const svg = d3
@@ -150,7 +208,7 @@ export function render(
     .join('g')
     .attr('transform', (d) => `translate(${d.x0},${d.y0})`)
 
-  leaves
+  const area = leaves
     .append('rect')
     .attr('id', (d, i) => 'path' + i)
     .attr('fill', (d) => {
@@ -197,6 +255,9 @@ export function render(
       .attr('y', imagesStrokeSize)
       .attr('preserveAspectRatio', `xMidYMid ${fillArea ? 'slice' : 'meet'}`)
       .attr('clip-path', (d, i) => 'url(#clip' + i + ')')
+      .style('filter', (d) =>
+        colorizeImages ? `url(#colorize-${d.data[1].color})` : ''
+      )
 
     leaves
       .append('rect')
@@ -206,6 +267,8 @@ export function render(
       .attr('x', Math.max(0, imagesStrokeSize / 2))
       .attr('y', Math.max(0, imagesStrokeSize / 2))
       .attr('fill', 'none')
+      // .style('mix-blend-mode', colorizeImages ? 'color' : 'normal')
+
       .attr('stroke', (d) => colorScale(d.data[1].color))
       .attr('stroke-width', imagesStrokeSize)
       .attr('clip-path', (d, i) => 'url(#clip' + i + ')')

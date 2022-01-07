@@ -42,5 +42,6 @@ export default {
     fillArea: true,
     imagesStrokeSize: 10,
     showLabelsOutline: true,
+    colorizeImages: true,
   },
 }
